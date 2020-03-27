@@ -4,7 +4,7 @@
  * Farsroid TelegramBot (v1.2)
  * Coded By https://kihanb.ir | @kihanb | @kihanb_ir
  */
- 
+
 error_reporting(0);
 //-----------------------------------------
 $admin = 615724046; // your userid
