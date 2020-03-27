@@ -9,7 +9,7 @@ error_reporting(0);
 //-----------------------------------------
 $admin = 615724046; // your userid
 $channel = "kihanb_ir"; // your channel id
-$token = 'FreeForEveryone'; // your api token [Buy New: @one_apis]
+$token = 'FreeForEveryone'; // your api token [Buy : https://one-api.ir]
 define('API_KEY',''); // your bot token
 //-----------------------------------------
 function Bot($method,$datas=[]){
