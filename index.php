@@ -9,7 +9,7 @@ error_reporting(0);
 //-----------------------------------------
 $admin = 615724046; // your userid
 $channel = "kihanb_ir"; // your channel id
-$token = 'FreeForEveryone'; // your api token [Buy : https://one-api.ir]
+$token = ''; // your api token [Buy : https://one-api.ir]
 define('API_KEY',''); // your bot token
 //-----------------------------------------
 function Bot($method,$datas=[]){
@@ -71,7 +71,7 @@ function GetChat($chatid){
 function GetMe(){
 	$get =  Bot('GetMe',[]);
 	return $get;
-} $botid = "@" . getMe() -> result -> username;
+} $botid =getMe() -> result -> username;
 
 
 
@@ -94,15 +94,20 @@ if(isset($update->message)){
     $data = $message->data;
 }
 if(isset($update->callback_query)){
-    $Data = $update->callback_query->data;
+    $data = $update->callback_query->data;
     $data_id = $update->callback_query->id;
     $chatid = $update->callback_query->message->chat->id;
     $fromid = $update->callback_query->from->id;
     $tccall = $update->callback_query->chat->type;
     $messageid = $update->callback_query->message->message_id;
 }
-$data = $message->data;
-$stats = file_get_contents("data/$from_id/stats.txt");
+
+if(isset($chat_id)){
+    $chat = $chat_id;
+}elseif(isset($chatid)){
+    $chat = $chatid;
+}
+$stats = file_get_contents("data/$chat/stats.txt");
 //-----------------------------------------
 function getChatMember($channel, $id = ""){
     $forchannel = json_decode(file_get_contents("https://api.telegram.org/bot".API_KEY."/getChatMember?chat_id=@$channel&user_id=".$id));
@@ -114,7 +119,7 @@ function getChatMember($channel, $id = ""){
          return false;
      }
 }
-if(getChatMember($channel, $chat_id) == false){
+if(getChatMember($channel, $chat) == false){
 	bot('SendMessage',[
         'chat_id'=>$chat,
         'text'=>"📣کاربر گرامی
@@ -126,7 +131,7 @@ if(getChatMember($channel, $chat_id) == false){
 
 سپس دستور /start را مجددا ارسال نمایید!",
         	 ]);
-}elseif($textmessage == "/start"){
+}elseif($textmessage == "/start" or $textmessage == "🔙"){
     if (!file_exists("data/$chat_id/stats.txt")) {
 		mkdir("data/$chat_id");
 		file_put_contents("data/$chat_id/stats.txt","none");
@@ -217,6 +222,50 @@ bot('sendphoto',[
         ])
    ]);
 }
+}elseif(strpos($data,'da_') !== false){
+
+$text2 = str_replace("da_",'https://www.farsroid.com/',$data);
+$mus = json_decode(file_get_contents("https://one-api.ir/farsroid/?token=$token&action=download&link=$text2"), true);
+$title = $mus['result']['title'];
+$pic = $mus['result']['pic'];
+$description = $mus['result']['description'];
+
+bot('sendphoto',[
+   'chat_id'=>$chatid,
+   'photo'=>$pic,
+   'caption'=>"📥$title
+   
+@RimonRobot",
+   ]);
+bot('sendMessage',[
+ 'chat_id'=>$chatid,
+ 'text'=>"💎توضیحات: $description
+
+@RimonRobot",
+ 'parse_mode'=>"HTML",
+	 ]);
+$links ="";
+	for($i=1;$i<4;$i++){
+$title = $mus['result']["link$i"]['title'];
+$link = $mus['result']["link$i"]['link'];
+if(!empty($title))
+$links .="\n <a href=\"$link\">$title</a>";
+}
+$info = $mus['result']['info'];
+
+
+	bot('sendMessage',[
+ 'chat_id'=>$chatid,
+ 'text'=>"📥جعبه دریافت:
+$links
+
+$info
+
+@RimonRobot",
+ 'parse_mode'=>"HTML",
+	 ]);
+
+  
 }elseif($textmessage == "🔎جستجو برنامه و بازی"){
 file_put_contents("data/$from_id/stats.txt","searchapp");
 
@@ -265,51 +314,7 @@ bot('sendphoto',[
         ])
    ]);
 }
-}
-}elseif(strpos($data,'da_') !== false){
 
-$text2 = str_replace("da_",'https://www.farsroid.com/',$data);
-$mus = json_decode(file_get_contents("https://one-api.ir/farsroid/?token=$token&action=download&link=$text2"), true);
-$title = $mus['result']['title'];
-$pic = $mus['result']['pic'];
-$description = $mus['result']['description'];
-
-bot('sendphoto',[
-   'chat_id'=>$chatid,
-   'photo'=>$pic,
-   'caption'=>"📥$title
-   
-@RimonRobot",
-   ]);
-bot('sendMessage',[
- 'chat_id'=>$chatid,
- 'text'=>"💎توضیحات: $description
-
-@RimonRobot",
- 'parse_mode'=>"HTML",
-	 ]);
-$links ="";
-	for($i=1;$i<4;$i++){
-$title = $mus['result']["link$i"]['title'];
-$link = $mus['result']["link$i"]['link'];
-if(!empty($title))
-$links .="\n <a href=\"$link\">$title</a>";
-}
-$info = $mus['result']['info'];
-
-
-	bot('sendMessage',[
- 'chat_id'=>$chatid,
- 'text'=>"📥جعبه دریافت:
-$links
-
-$info
-
-@RimonRobot",
- 'parse_mode'=>"HTML",
-	 ]);
-
-  
 }
 
 ?>
