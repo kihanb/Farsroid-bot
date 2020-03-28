@@ -134,11 +134,12 @@ if(getChatMember($channel, $chat) == false){
 }elseif($textmessage == "/start" or $textmessage == "🔙"){
     if (!file_exists("data/$chat_id/stats.txt")) {
 		mkdir("data/$chat_id");
-		file_put_contents("data/$chat_id/stats.txt","none");
 		$myfile2 = fopen("data/users.txt", "a") or die("Unable to open file!");
         fwrite($myfile2, "$chat_id\n");
         fclose($myfile2);
 	}
+	
+	file_put_contents("data/$chat_id/stats.txt","none");
 	bot('sendMessage',[
  'chat_id'=>$chat_id,
  'text'=>"🎲به ربات فارسروید خوش آمدید!
